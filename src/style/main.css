@@ -1,0 +1,15 @@
+:root {
+  --primary_white: #EEE;
+  --primary_grey: #AAA;
+  --secondary_grey: #C4C4C4;
+  --primary_blue: #247CFF;
+  --primary_red: #F35050;
+  --icon-color_text: #979797;
+  --icon-color_folder: #D7BA52;
+  --font: "Arial, Helvetica, sans-serif";
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+}/*# sourceMappingURL=main.css.map */
