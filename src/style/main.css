@@ -1,4 +1,59 @@
 body {
   margin: 0;
   font-family: "Arial, Helvetica, sans-serif";
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+button {
+  border: none;
+  margin: auto 1px;
+}
+
+div.window {
+  border: solid 5px #247CFF;
+  width: 30rem;
+  max-width: 100vw;
+  /**
+  * Control 
+  */
+  /**
+  * Topbar
+  */
+  /**
+  * Content
+  */
+}
+div.window > .control {
+  background-color: #247CFF;
+}
+div.window > .control .right {
+  float: right;
+}
+div.window > .control > .title {
+  color: #EEE;
+  font-size: 18px;
+}
+div.window .topbar {
+  background-color: #C4C4C4;
+}
+div.window .content {
+  min-height: 5rem;
+}
+div.window .content .item {
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  margin: 0.5rem;
+}
+div.window .content .item img {
+  display: block;
+  height: 70px;
+  width: 70px;
+}
+div.window .content .item label {
+  text-align: center;
+  display: block;
 }/*# sourceMappingURL=main.css.map */

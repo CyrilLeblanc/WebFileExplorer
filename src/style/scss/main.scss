@@ -1,5 +1,63 @@
-@import 'color'; 
+@import "color";
+
 body {
   margin: 0;
   font-family: $font;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+button {
+  border: none;
+  margin: auto 1px;
+}
+
+div.window {
+  border: solid 5px $primary_blue;
+  width: 30rem;
+  max-width: 100vw;
+
+  /**
+  * Control 
+  */
+  & > .control {
+    .right {
+      float: right;
+    }
+    > .title {
+      color: $primary_white;
+      font-size: 18px;
+    }
+
+    background-color: $primary_blue;
+  }
+
+  /**
+  * Topbar
+  */
+  .topbar {
+    background-color: $secondary_grey;
+  }
+
+  /**
+  * Content
+  */
+  .content {
+    min-height: 5rem;
+    .item {
+      width: min-content;
+      margin: 0.5rem;
+      img {
+        display: block;
+        height: 70px;
+        width: 70px;
+      }
+      label {
+        text-align: center;
+        display: block;
+      }
+    }
+  }
 }
