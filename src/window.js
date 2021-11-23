@@ -3,14 +3,29 @@ import Item from "./item.js";
 
 class Window extends React.Component {
   constructor(props) {
-    console.clear();
     super(props);
-    this.state = { items: [], currentPath: "/home/user/" };
-    console.log(this.state);
-    this.addItem("test.txt");
+    this.state = {
+      items: [
+        { id: 0, path: "/home/user/photo de vacances.jpeg" },
+        { id: 1, path: "/home/user/random.txt" },
+        { id: 2, path: "/home/user/facture.txt" },
+        { id: 3, path: "/home/user/sans extension" },
+        { id: 4, path: "/home/user/test.txt" },
+        { id: 5, path: "/home/user/test.txt" },
+        { id: 6, path: "/home/user/test.txt" },
+        { id: 7, path: "/home/user/test.txt" },
+        { id: 8, path: "/home/user/test.txt" },
+        { id: 9, path: "/home/user/test.txt" },
+        { id: 10, path: "/home/user/test.txt" },
+        { id: 11, path: "/home/user/test.txt" },
+      ],
+      currentPath: "/home/user/",
+      selected: [],
+      clipboard: [],
+    };
   }
 
-  addItem(name) {
+  createItem(name) {
     const items = this.state.items.slice();
     let id, type, path;
 
@@ -22,31 +37,41 @@ class Window extends React.Component {
           return o.id;
         })
       ) + 1;
-    
+
     // get extension from filename
     let ext = /(?:\.([^.]+))?$/.exec(name)[1];
-    console.log("extension : " + ext);
 
     // get type depending on the extension
     if (["txt", "odt"].indexOf(ext) !== -1) type = "text";
     if (["mp3"].indexOf(ext) !== -1) type = "music";
-    console.log("type : " + type);
 
     // get path from current path
     path = this.state.currentPath.slice();
 
-    items.push({id: id, name: name, type: type, path: path});
-    this.setState({items: items});
+    return { id: id, name: name, type: type, path: path };
+  }
+
+  addItem(name) {
+    const items = this.state.items.slice();
+
+    items.push(this.createItem(name));
+    this.setState({ items: items });
   }
 
   render() {
     return (
       <div className="window">
         {this.getControlEl()}
-        {this.getTopBarEl()}
+        {this.getTopBarEl()}4
         <div className="content">
-          {this.state.items.map(el => {
-            return <Item name={el.name} type={el.type}/>
+          {this.state.items.map((el) => {
+            // get item that are only in this path
+            if (
+              this.state.currentPath ===
+              el.path.substring(0, el.path.lastIndexOf("/")) + "/"
+            ) {
+              return <Item path={el.path} />;
+            }
           })}
         </div>
       </div>
@@ -65,7 +90,7 @@ class Window extends React.Component {
           <button>[]</button>
           <button>X</button>
         </div>
-        <div className="title">WebFileManager</div>
+        <div className="title">WebFileExplorer</div>
       </div>
     );
   }
