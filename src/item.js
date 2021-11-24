@@ -8,7 +8,7 @@ class Item extends React.Component {
 
   render() {
     // get name and extension from full path of file
-    let name = this.props.path.replace(/^.*[\\\/]/, "");
+    let name = this.props.path.replace(/^.*[\\/]/, "");
     let ext = /[^.]+$/.exec(this.props.path)[0];
     let type = "none";
 
@@ -25,9 +25,8 @@ class Item extends React.Component {
   }
 
   handleClick(){
-    
-
-    this.ref.current.classList.toggle("selected")
+    this.ref.current.classList.toggle("selected");
+    this.props.clickItem(this.props.id);
   }
 }
 

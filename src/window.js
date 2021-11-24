@@ -4,78 +4,68 @@ import Item from "./item.js";
 class Window extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      items: [
-        { id: 0, path: "/home/user/photo de vacances.jpeg" },
-        { id: 1, path: "/home/user/random.txt" },
-        { id: 2, path: "/home/user/facture.txt" },
-        { id: 3, path: "/home/user/sans extension" },
-        { id: 4, path: "/home/user/test.txt" },
-        { id: 5, path: "/home/user/test.txt" },
-        { id: 6, path: "/home/user/test.txt" },
-        { id: 7, path: "/home/user/test.txt" },
-        { id: 8, path: "/home/user/test.txt" },
-        { id: 9, path: "/home/user/test.txt" },
-        { id: 10, path: "/home/user/test.txt" },
-        { id: 11, path: "/home/user/test.txt" },
-      ],
-      currentPath: "/home/user/",
+      currentPath: "/Documents/temp",
       selected: [],
       clipboard: [],
+      items: {
+        type: "directory",
+        name: "/",
+        children: [
+          {
+            type: "directory",
+            name: "Documents",
+            children: [
+              { type: "file", name: "facture.odt" },
+              { type: "file", name: "test.txt" },
+              {
+                type: "directory",
+                name: "temp",
+                children: [{ type: "directory", name: "finale", children: [] }],
+              },
+            ],
+          },
+          {
+            type: "directory",
+            name: "Images",
+            children: [],
+          },
+          { type: "file", name: "test.odt" },
+        ],
+      },
     };
   }
 
-  createItem(name) {
-    const items = this.state.items.slice();
-    let id, type, path;
+  /**
+   * go through the items tree and return the right one
+   */
+  getItems() {
+    const currentPath = ["/"].concat(this.state.currentPath.slice().split("/"));
 
-    // get max id in items + 1
-    id =
-      Math.max.apply(
-        Math,
-        items.map((o) => {
-          return o.id;
-        })
-      ) + 1;
-
-    // get extension from filename
-    let ext = /(?:\.([^.]+))?$/.exec(name)[1];
-
-    // get type depending on the extension
-    if (["txt", "odt"].indexOf(ext) !== -1) type = "text";
-    if (["mp3"].indexOf(ext) !== -1) type = "music";
-
-    // get path from current path
-    path = this.state.currentPath.slice();
-
-    return { id: id, name: name, type: type, path: path };
+    let items = this.state.items;
+    currentPath.map((name) => {
+      items.children.map((dir, i) => {
+        if (dir.type === "directory" && dir.name === name) {
+          items = dir;
+        }
+      });
+    });
+    console.log(items);
   }
 
-  addItem(name) {
-    const items = this.state.items.slice();
-
-    items.push(this.createItem(name));
-    this.setState({ items: items });
-  }
-
-  render() {
-    return (
-      <div className="window">
-        {this.getControlEl()}
-        {this.getTopBarEl()}4
-        <div className="content">
-          {this.state.items.map((el) => {
-            // get item that are only in this path
-            if (
-              this.state.currentPath ===
-              el.path.substring(0, el.path.lastIndexOf("/")) + "/"
-            ) {
-              return <Item path={el.path} />;
-            }
-          })}
-        </div>
-      </div>
-    );
+  /**
+   * handle click on items
+   * @param {*} id
+   */
+  clickItem(id) {
+    const selected = this.state.selected.slice();
+    if (selected.indexOf(id) !== -1) {
+      selected.splice(selected.indexOf(id), 1);
+    } else {
+      selected.push(id);
+    }
+    this.setState({ selected: selected });
   }
 
   /**
@@ -103,17 +93,27 @@ class Window extends React.Component {
     return (
       <div className="topbar">
         <div className="searchbar">
-          <input type="text" id="searchbar" value={this.state.currentPath} />
-          <button id="before">before</button>
-          <button id="next">next</button>
+          <input type="text" value={this.state.currentPath} />
+          <button>before</button>
+          <button>next</button>
         </div>
         <div className="action">
-          <button id="copy">copy</button>
-          <button id="paste">paste</button>
-          <button id="delete">delete</button>
-          <button id="cut">cut</button>
-          <button id="rename">rename</button>
+          <button>copy</button>
+          <button>paste</button>
+          <button>delete</button>
+          <button>cut</button>
+          <button>rename</button>
         </div>
+      </div>
+    );
+  }
+
+  render() {
+    return (
+      <div className="window">
+        {this.getControlEl()}
+        {this.getTopBarEl()}
+        <div className="content">{this.getItems()}</div>
       </div>
     );
   }
