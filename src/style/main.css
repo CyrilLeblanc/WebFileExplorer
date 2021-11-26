@@ -52,7 +52,6 @@ div.window .content {
   max-height: 20rem;
   max-width: 30rem;
   overflow: auto;
-  text-align: center;
 }
 div.window .content .item {
   display: inline-block;
