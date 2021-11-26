@@ -7,7 +7,7 @@ class Window extends React.Component {
 
     this.state = {
       currentPath: "/",
-      mode: "selection", // "navigation" | "selection"
+      mode: "navigation", // "navigation" | "selection"
       selected: [],
       clipboard: [],
       items: {
@@ -73,8 +73,8 @@ class Window extends React.Component {
       );
       return null;
     });
-    if(items.length === 0){
-      return <small>Empty Directory.</small>
+    if (items.length === 0) {
+      return <small>Empty Directory.</small>;
     }
     return items;
   }
@@ -101,51 +101,31 @@ class Window extends React.Component {
     }
   }
 
-  /**
-   * Get control bar of window
-   * @returns element
-   */
-  getControlEl() {
-    return (
-      <div className="control">
-        <div className="right">
-          <button>_</button>
-          <button>[]</button>
-          <button>X</button>
-        </div>
-        <div className="title">WebFileExplorer</div>
-      </div>
-    );
-  }
-
-  /**
-   * Get topbar containing path and action bar
-   * @returns element
-   */
-  getTopBarEl() {
-    return (
-      <div className="topbar">
-        <div className="searchbar">
-          <input type="text" value={this.state.currentPath} />
-          <button>before</button>
-          <button>next</button>
-        </div>
-        <div className="action">
-          <button>copy</button>
-          <button>paste</button>
-          <button>delete</button>
-          <button>cut</button>
-          <button>rename</button>
-        </div>
-      </div>
-    );
-  }
-
   render() {
     return (
       <div className="window">
-        {this.getControlEl()}
-        {this.getTopBarEl()}
+        <div className="control">
+          <div className="right">
+            <button>_</button>
+            <button>[]</button>
+            <button>X</button>
+          </div>
+          <div className="title">WebFileExplorer</div>
+        </div>
+        <div className="topbar">
+          <div className="searchbar">
+            <input type="text" value={this.state.currentPath} />
+            <button>back</button>
+            <button>next</button>
+          </div>
+          <div className="action">
+            <button>copy</button>
+            <button>paste</button>
+            <button>delete</button>
+            <button>cut</button>
+            <button>rename</button>
+          </div>
+        </div>
         <div className="content">{this.getItems()}</div>
       </div>
     );
@@ -156,6 +136,13 @@ export default Window;
 
 /**
  * TODO :
- * bug : selected css class when click in "navigation" mode
- * bug : name of file concat to path when clicked in "navigation" mode start
+ * feat : add mode button
+ * feat : back and next button
+ * feat : clipboard (when click on copy)
+ * feat : paste 
+ * feat : delete
+ * feat : rename
+ * feat : cut
+ * feat : review CSS
+ * feat : window gesture (in control bar)
  */
