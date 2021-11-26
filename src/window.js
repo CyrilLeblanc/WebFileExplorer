@@ -6,7 +6,8 @@ class Window extends React.Component {
     super(props);
 
     this.state = {
-      currentPath: "/Documents/temp",
+      currentPath: "/",
+      mode: "selection", // "navigation" | "selection"
       selected: [],
       clipboard: [],
       items: {
@@ -38,34 +39,66 @@ class Window extends React.Component {
   }
 
   /**
-   * go through the items tree and return the right one
+   * return the current directory depending on the currentPath
    */
-  getItems() {
+  getCurrentDir() {
     const currentPath = ["/"].concat(this.state.currentPath.slice().split("/"));
-
     let items = this.state.items;
     currentPath.map((name) => {
       items.children.map((dir, i) => {
         if (dir.type === "directory" && dir.name === name) {
           items = dir;
+        } else {
+          return null;
         }
+        return null;
       });
+      return null;
     });
-    console.log(items);
+    return items;
   }
 
   /**
-   * handle click on items
-   * @param {*} id
+   * return list of <Item> depending of the current directory
    */
-  clickItem(id) {
-    const selected = this.state.selected.slice();
-    if (selected.indexOf(id) !== -1) {
-      selected.splice(selected.indexOf(id), 1);
-    } else {
-      selected.push(id);
+  getItems() {
+    let items = [];
+    this.getCurrentDir().children.map((el) => {
+      items.push(
+        <Item
+          name={el.name}
+          type={el.type}
+          clickItem={this.clickItem.bind(this)}
+        />
+      );
+      return null;
+    });
+    if(items.length === 0){
+      return <small>Empty Directory.</small>
     }
-    this.setState({ selected: selected });
+    return items;
+  }
+
+  /**
+   * handle click on items :
+   * add or remove the element depending if it's already in state.selected and update appearance
+   * @param String name
+   */
+  clickItem(name, type, ref) {
+    const selected = this.state.selected.slice();
+    if (this.state.mode === "selection" && type === "file") {
+      ref.current.classList.toggle("selected");
+      const path = this.state.currentPath + name;
+      if (selected.indexOf(path) === -1) {
+        selected.push(path);
+      } else {
+        selected.splice(selected.indexOf(path), 1);
+      }
+
+      this.setState({ selected: selected });
+    } else if (this.state.mode === "navigation" && type === "directory") {
+      this.setState({ currentPath: this.state.currentPath + name + "/" });
+    }
   }
 
   /**
@@ -86,7 +119,7 @@ class Window extends React.Component {
   }
 
   /**
-   * Get topbar containing path and action
+   * Get topbar containing path and action bar
    * @returns element
    */
   getTopBarEl() {
@@ -120,3 +153,9 @@ class Window extends React.Component {
 }
 
 export default Window;
+
+/**
+ * TODO :
+ * bug : selected css class when click in "navigation" mode
+ * bug : name of file concat to path when clicked in "navigation" mode start
+ */

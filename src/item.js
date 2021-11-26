@@ -1,32 +1,34 @@
 import React from "react";
 
 class Item extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.ref = React.createRef();
   }
 
   render() {
-    // get name and extension from full path of file
-    let name = this.props.path.replace(/^.*[\\/]/, "");
-    let ext = /[^.]+$/.exec(this.props.path)[0];
+    let ext = this.props.name.split(".");
+    ext = ext[ext.length - 1];
     let type = "none";
-
     if (["txt", "odt"].indexOf(ext) !== -1) type = "text";
     if (["mp3"].indexOf(ext) !== -1) type = "music";
     if (["png", "jpeg", "gif"].indexOf(ext) !== -1) type = "image";
+    if (this.props.type === "directory") type = "directory";
 
     return (
-      <div className="item" ref={this.ref} onClick={this.handleClick.bind(this)}>
-        <img src={"/icons/" + type + ".svg"} alt={name} />
-        <label>{name}</label>
+      <div
+        className="item"
+        ref={this.ref}
+        onClick={this.handleClick.bind(this)}
+      >
+        <img src={"/icons/" + type + ".svg"} alt={this.props.name} />
+        <label>{this.props.name}</label>
       </div>
     );
   }
 
-  handleClick(){
-    this.ref.current.classList.toggle("selected");
-    this.props.clickItem(this.props.id);
+  handleClick() {
+    this.props.clickItem(this.props.name, this.props.type, this.ref);
   }
 }
 
