@@ -37,12 +37,25 @@ class Window extends React.Component {
     };
   }
 
+  /**
+   * Allow the user to switch mode between "selection" and "navigation" mode.
+   */
   switchMode() {
-    console.log(this.state.mode);
     if (this.state.mode === "selection") {
       this.setState({ mode: "navigation" });
     } else if (this.state.mode === "navigation") {
       this.setState({ mode: "selection" });
+    }
+  }
+
+  /**
+   * Allow the user to go back in directory tree
+   */
+  goBack(){
+    if (this.state.currentPath !== "/"){
+      const element = this.state.currentPath.split("/");
+      element.splice(element.length-2, 1)
+      this.setState({currentPath: element.join('/')})
     }
   }
 
@@ -123,7 +136,7 @@ class Window extends React.Component {
         <div className="topbar">
           <div className="searchbar">
             <input type="text" value={this.state.currentPath} disabled />
-            <button>back</button>
+            <button onClick={this.goBack.bind(this)}>back</button>
             <button>next</button>
           </div>
           <div className="action">
@@ -148,7 +161,6 @@ export default Window;
 
 /**
  * TODO :
- * feat : add mode button
  * feat : back and next button
  * feat : clipboard (when click on copy)
  * feat : paste
