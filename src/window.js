@@ -5,10 +5,11 @@ class Window extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentPath: "/",
+      currentPath: "/Documents/temp/",
       mode: "navigation", // "navigation" | "selection"
       selected: [],
       clipboard: [],
+      history: [],
       items: {
         type: "directory",
         name: "/",
@@ -22,18 +23,18 @@ class Window extends React.Component {
               {
                 type: "directory",
                 name: "temp",
-                children: [{ type: "directory", name: "finale", children: [] }],
+                children: [
+                  { type: "directory", name: "finale", children: [] },
+                  { type: "file", name: "re.odt" },
+                  { type: "file", name: "ie.odt" },
+                  { type: "file", name: "za.odt" },
+                ],
               },
             ],
           },
           {
             type: "directory",
             name: "Images",
-            children: [],
-          },
-          {
-            type: "directory",
-            name: "Downloads",
             children: [],
           },
           {
@@ -67,6 +68,50 @@ class Window extends React.Component {
       element.splice(element.length - 2, 1);
       this.setState({ currentPath: element.join("/") });
     }
+  }
+
+  /**
+   * put selected element in clipboard
+   */
+  clickCopy() {
+    this.setState({ clipboard: this.state.selected.slice() });
+  }
+
+  /**
+   * paste element in clipboard into current directory
+   */
+  clickPaste() {
+    this.state.clipboard.forEach((el) => {
+      this.getCurrentDir().children.push({
+        name: el.slice(el.lastIndexOf("/") + 1),
+        type: "file",
+      });
+    });
+    this.forceUpdate();
+  }
+
+  /**
+   * delete selected items in current directory
+   */
+  clickDelete(){
+    let children = this.getCurrentDir().children;
+    this.state.selected.forEach((item) => {
+      children.splice(
+        children.findIndex(el => {
+          return el.name === (item.slice(item.lastIndexOf("/") + 1))
+        }), 1);
+    })
+    this.forceUpdate();
+    this.setState({selected: []});
+  }
+
+  /**
+   * put the selected items in clipboard and delete them
+   */
+  clickCut(){
+    this.clickCopy();
+    console.log(this.state.clipboard);
+    this.clickDelete();
   }
 
   /**
@@ -113,7 +158,6 @@ class Window extends React.Component {
   /**
    * handle click on items :
    * add or remove the element depending if it's already in state.selected and update appearance
-   * @param String name
    */
   clickItem(name, type, ref) {
     const selected = this.state.selected.slice();
@@ -128,6 +172,7 @@ class Window extends React.Component {
 
       this.setState({ selected: selected });
     } else if (this.state.mode === "navigation" && type === "directory") {
+      this.setState({ selected: [] });
       this.setState({ currentPath: this.state.currentPath + name + "/" });
     }
   }
@@ -137,9 +182,15 @@ class Window extends React.Component {
       <div className="window">
         <div className="control">
           <div className="right">
-            <button><img src="/icons/down.svg" /></button>
-            <button><img src="/icons/expand.svg" /></button>
-            <button><img src="/icons/close.svg" /></button>
+            <button>
+              <img src="/icons/down.svg" alt="down" />
+            </button>
+            <button>
+              <img src="/icons/expand.svg" alt="expand" />
+            </button>
+            <button>
+              <img src="/icons/close.svg" alt="close" />
+            </button>
           </div>
           <div className="title">WebFileExplorer</div>
         </div>
@@ -147,10 +198,10 @@ class Window extends React.Component {
           <div className="searchbar">
             <input type="text" value={this.state.currentPath} disabled />
             <button onClick={this.goBack.bind(this)} title="Back">
-              <img src="/icons/back.svg" />
+              <img src="/icons/back.svg" alt="back" />
             </button>
             <button title="Next">
-              <img src="/icons/next.svg" />
+              <img src="/icons/next.svg" alt="next" />
             </button>
           </div>
           <div className="action">
@@ -158,20 +209,20 @@ class Window extends React.Component {
             <button onClick={this.switchMode.bind(this)}>
               {this.state.mode}
             </button>
-            <button title="Copy">
-              <img src="/icons/copy.svg" />
+            <button title="Copy" onClick={this.clickCopy.bind(this)}>
+              <img src="/icons/copy.svg" alt="copy" />
             </button>
-            <button title="Paste">
-              <img src="/icons/paste.svg" />
+            <button title="Paste" onClick={this.clickPaste.bind(this)}>
+              <img src="/icons/paste.svg" alt="paste" />
             </button>
-            <button title="Delete">
-              <img src="/icons/delete.svg" />
+            <button title="Delete" onClick={this.clickDelete.bind(this)}>
+              <img src="/icons/delete.svg" alt="delete" />
             </button>
-            <button title="Cut">
-              <img src="/icons/cut.svg" />
+            <button title="Cut" onClick={this.clickCut.bind(this)}>
+              <img src="/icons/cut.svg" alt="cut" />
             </button>
             <button title="Rename">
-              <img src="/icons/rename.svg" />
+              <img src="/icons/rename.svg" alt="rename" />
             </button>
           </div>
         </div>
@@ -185,13 +236,9 @@ export default Window;
 
 /**
  * TODO :
- * feat : add icons
+ * feat : make the window take all the space
  * feat : next button
- * feat : clipboard (when click on copy)
- * feat : paste
- * feat : delete
  * feat : rename
  * feat : cut
  * feat : review CSS
- * feat : window gesture (in control bar)
  */
