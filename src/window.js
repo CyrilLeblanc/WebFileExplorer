@@ -31,6 +31,16 @@ class Window extends React.Component {
             name: "Images",
             children: [],
           },
+          {
+            type: "directory",
+            name: "Downloads",
+            children: [],
+          },
+          {
+            type: "directory",
+            name: "Videos",
+            children: [],
+          },
           { type: "file", name: "test.odt" },
         ],
       },
@@ -51,11 +61,11 @@ class Window extends React.Component {
   /**
    * Allow the user to go back in directory tree
    */
-  goBack(){
-    if (this.state.currentPath !== "/"){
+  goBack() {
+    if (this.state.currentPath !== "/") {
       const element = this.state.currentPath.split("/");
-      element.splice(element.length-2, 1)
-      this.setState({currentPath: element.join('/')})
+      element.splice(element.length - 2, 1);
+      this.setState({ currentPath: element.join("/") });
     }
   }
 
@@ -127,28 +137,42 @@ class Window extends React.Component {
       <div className="window">
         <div className="control">
           <div className="right">
-            <button>_</button>
-            <button>[]</button>
-            <button>X</button>
+            <button><img src="/icons/down.svg" /></button>
+            <button><img src="/icons/expand.svg" /></button>
+            <button><img src="/icons/close.svg" /></button>
           </div>
           <div className="title">WebFileExplorer</div>
         </div>
         <div className="topbar">
           <div className="searchbar">
             <input type="text" value={this.state.currentPath} disabled />
-            <button onClick={this.goBack.bind(this)}>back</button>
-            <button>next</button>
+            <button onClick={this.goBack.bind(this)} title="Back">
+              <img src="/icons/back.svg" />
+            </button>
+            <button title="Next">
+              <img src="/icons/next.svg" />
+            </button>
           </div>
           <div className="action">
             <small>Mode : </small>
             <button onClick={this.switchMode.bind(this)}>
               {this.state.mode}
             </button>
-            <button>copy</button>
-            <button>paste</button>
-            <button>delete</button>
-            <button>cut</button>
-            <button>rename</button>
+            <button title="Copy">
+              <img src="/icons/copy.svg" />
+            </button>
+            <button title="Paste">
+              <img src="/icons/paste.svg" />
+            </button>
+            <button title="Delete">
+              <img src="/icons/delete.svg" />
+            </button>
+            <button title="Cut">
+              <img src="/icons/cut.svg" />
+            </button>
+            <button title="Rename">
+              <img src="/icons/rename.svg" />
+            </button>
           </div>
         </div>
         <div className="content">{this.getItems()}</div>
@@ -161,7 +185,8 @@ export default Window;
 
 /**
  * TODO :
- * feat : back and next button
+ * feat : add icons
+ * feat : next button
  * feat : clipboard (when click on copy)
  * feat : paste
  * feat : delete

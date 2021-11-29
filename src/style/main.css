@@ -1,9 +1,15 @@
 body {
   margin: 0;
   font-family: "Arial, Helvetica, sans-serif";
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   height: 100vh;
 }
 
@@ -27,24 +33,41 @@ div.window {
   * Content
   */
 }
+
 div.window > .control {
   background-color: #247CFF;
 }
+
 div.window > .control .right {
   float: right;
 }
+
 div.window > .control > .title {
   color: #EEE;
   font-size: 18px;
+  height: 2rem;
 }
+
+div.window > .control button img {
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
 div.window .topbar {
   background-color: #C4C4C4;
 }
+
 div.window .topbar .searchbar input {
   width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;
 }
+
+div.window .topbar button img {
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
 div.window .content {
   min-height: 5rem;
   height: 100%;
@@ -53,6 +76,7 @@ div.window .content {
   max-width: 30rem;
   overflow: auto;
 }
+
 div.window .content .item {
   display: inline-block;
   width: -webkit-min-content;
@@ -62,16 +86,19 @@ div.window .content .item {
   padding: 0.5rem;
   max-width: 7rem;
 }
+
 div.window .content .item:hover {
   outline: 1px solid #247CFF;
   cursor: pointer;
 }
+
 div.window .content .item img {
   display: block;
   height: 70px;
   width: 70px;
   margin: auto;
 }
+
 div.window .content .item label {
   text-align: center;
   display: block;
@@ -79,6 +106,8 @@ div.window .content .item label {
   text-overflow: ellipsis;
   max-height: 3rem;
 }
+
 div.window .content .item.selected {
   background-color: #aef;
-}/*# sourceMappingURL=main.css.map */
+}
+/*# sourceMappingURL=main.css.map */

@@ -30,9 +30,16 @@ div.window {
     > .title {
       color: $primary_white;
       font-size: 18px;
+      height: 2rem;
     }
 
     background-color: $primary_blue;
+    button {
+      img {
+        height: 1.5rem;
+        width: 1.5rem;
+      }
+    }
   }
 
   /**
@@ -40,9 +47,15 @@ div.window {
   */
   .topbar {
     background-color: $secondary_grey;
-    .searchbar{
-      input{
+    .searchbar {
+      input {
         width: max-content;
+      }
+    }
+    button {
+      img {
+        height: 1.5rem;
+        width: 1.5rem;
       }
     }
   }
@@ -64,8 +77,8 @@ div.window {
       margin: 0.5rem;
       padding: 0.5rem;
       max-width: 7rem;
-      
-      &:hover{
+
+      &:hover {
         outline: 1px solid $primary_blue;
         cursor: pointer;
       }
@@ -83,7 +96,7 @@ div.window {
         max-height: 3rem;
       }
 
-      &.selected{
+      &.selected {
         background-color: #aef;
       }
     }
