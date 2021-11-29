@@ -5,7 +5,7 @@ class Window extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentPath: "/Documents/temp/",
+      currentPath: "/",
       mode: "navigation", // "navigation" | "selection"
       selected: [],
       clipboard: [],
@@ -54,6 +54,10 @@ class Window extends React.Component {
   switchMode() {
     if (this.state.mode === "selection") {
       this.setState({ mode: "navigation" });
+      this.setState({ selected: [] });
+      [].forEach.call(document.querySelectorAll(".selected"), (el) => {
+        el.classList.remove("selected");
+      });
     } else if (this.state.mode === "navigation") {
       this.setState({ mode: "selection" });
     }
@@ -74,44 +78,55 @@ class Window extends React.Component {
    * put selected element in clipboard
    */
   clickCopy() {
-    this.setState({ clipboard: this.state.selected.slice() });
+    let clipboard = this.state.clipboard.splice();
+    this.state.selected.forEach((name) => {
+      clipboard.push(this.getItem(name));
+    });
+    this.setState({ clipboard: clipboard });
+    this.switchMode();
   }
 
   /**
    * paste element in clipboard into current directory
    */
   clickPaste() {
-    this.state.clipboard.forEach((el) => {
-      this.getCurrentDir().children.push({
-        name: el.slice(el.lastIndexOf("/") + 1),
-        type: "file",
+    let clipboard = this.state.clipboard.slice();
+    clipboard.forEach((el) => {
+      this.getCurrentDir().children.forEach((item) => {
+        if (item.name === el.name) {
+          el.name += "(1)";
+        }
       });
+      this.getCurrentDir().children.push(el);
     });
     this.forceUpdate();
+    this.switchMode();
   }
 
   /**
    * delete selected items in current directory
    */
-  clickDelete(){
+  clickDelete() {
     let children = this.getCurrentDir().children;
     this.state.selected.forEach((item) => {
       children.splice(
-        children.findIndex(el => {
-          return el.name === (item.slice(item.lastIndexOf("/") + 1))
-        }), 1);
-    })
+        children.findIndex((el) => {
+          return el.name === item;
+        }),
+        1
+      );
+    });
     this.forceUpdate();
-    this.setState({selected: []});
+    this.switchMode();
   }
 
   /**
    * put the selected items in clipboard and delete them
    */
-  clickCut(){
+  clickCut() {
     this.clickCopy();
-    console.log(this.state.clipboard);
     this.clickDelete();
+    this.switchMode();
   }
 
   /**
@@ -132,6 +147,19 @@ class Window extends React.Component {
       return null;
     });
     return items;
+  }
+
+  /**
+   * return the item depending on the current directory and the name of the item
+   */
+  getItem(name) {
+    let temp = null;
+    this.getCurrentDir().children.forEach((item) => {
+      if (item.name === name) {
+        temp = item;
+      }
+    });
+    return temp;
   }
 
   /**
@@ -161,15 +189,13 @@ class Window extends React.Component {
    */
   clickItem(name, type, ref) {
     const selected = this.state.selected.slice();
-    if (this.state.mode === "selection" && type === "file") {
+    if (this.state.mode === "selection") {
       ref.current.classList.toggle("selected");
-      const path = this.state.currentPath + name;
-      if (selected.indexOf(path) === -1) {
-        selected.push(path);
+      if (selected.indexOf(name) === -1) {
+        selected.push(name);
       } else {
-        selected.splice(selected.indexOf(path), 1);
+        selected.splice(selected.indexOf(name), 1);
       }
-
       this.setState({ selected: selected });
     } else if (this.state.mode === "navigation" && type === "directory") {
       this.setState({ selected: [] });
@@ -221,7 +247,12 @@ class Window extends React.Component {
             <button title="Cut" onClick={this.clickCut.bind(this)}>
               <img src="/icons/cut.svg" alt="cut" />
             </button>
-            <button title="Rename">
+            <button
+              title="Rename"
+              onClick={() => {
+                console.log(this.state);
+              }}
+            >
               <img src="/icons/rename.svg" alt="rename" />
             </button>
           </div>
@@ -236,9 +267,9 @@ export default Window;
 
 /**
  * TODO :
+ * fix  : clipboard must contain elements and not paths
  * feat : make the window take all the space
  * feat : next button
  * feat : rename
- * feat : cut
  * feat : review CSS
  */
