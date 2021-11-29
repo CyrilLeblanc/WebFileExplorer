@@ -4,7 +4,6 @@ import Item from "./item.js";
 class Window extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       currentPath: "/",
       mode: "navigation", // "navigation" | "selection"
@@ -36,6 +35,15 @@ class Window extends React.Component {
         ],
       },
     };
+  }
+
+  switchMode() {
+    console.log(this.state.mode);
+    if (this.state.mode === "selection") {
+      this.setState({ mode: "navigation" });
+    } else if (this.state.mode === "navigation") {
+      this.setState({ mode: "selection" });
+    }
   }
 
   /**
@@ -114,11 +122,15 @@ class Window extends React.Component {
         </div>
         <div className="topbar">
           <div className="searchbar">
-            <input type="text" value={this.state.currentPath} />
+            <input type="text" value={this.state.currentPath} disabled />
             <button>back</button>
             <button>next</button>
           </div>
           <div className="action">
+            <small>Mode : </small>
+            <button onClick={this.switchMode.bind(this)}>
+              {this.state.mode}
+            </button>
             <button>copy</button>
             <button>paste</button>
             <button>delete</button>
@@ -139,7 +151,7 @@ export default Window;
  * feat : add mode button
  * feat : back and next button
  * feat : clipboard (when click on copy)
- * feat : paste 
+ * feat : paste
  * feat : delete
  * feat : rename
  * feat : cut

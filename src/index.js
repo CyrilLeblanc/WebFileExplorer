@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 import "./style/main.css";
 import Window from "./window.js";
 
-
 class App extends React.Component {
   render() {
     return (
