@@ -6,7 +6,6 @@ class Window extends React.Component {
     super(props);
     this.state = {
       currentPath: "/",
-      mode: "navigation", // "navigation" | "selection"
       selected: [],
       clipboard: [],
       history: [],
@@ -18,8 +17,6 @@ class Window extends React.Component {
             type: "directory",
             name: "Documents",
             children: [
-              { type: "file", name: "facture.odt" },
-              { type: "file", name: "test.txt" },
               {
                 type: "directory",
                 name: "temp",
@@ -30,6 +27,8 @@ class Window extends React.Component {
                   { type: "file", name: "za.odt" },
                 ],
               },
+              { type: "file", name: "facture.odt" },
+              { type: "file", name: "test.txt" },
             ],
           },
           {
@@ -46,21 +45,6 @@ class Window extends React.Component {
         ],
       },
     };
-  }
-
-  /**
-   * Allow the user to switch mode between "selection" and "navigation" mode.
-   */
-  switchMode() {
-    if (this.state.mode === "selection") {
-      this.setState({ mode: "navigation" });
-      this.setState({ selected: [] });
-      [].forEach.call(document.querySelectorAll(".selected"), (el) => {
-        el.classList.remove("selected");
-      });
-    } else if (this.state.mode === "navigation") {
-      this.setState({ mode: "selection" });
-    }
   }
 
   /**
@@ -82,8 +66,8 @@ class Window extends React.Component {
     this.state.selected.forEach((name) => {
       clipboard.push(this.getItem(name));
     });
+    this.unselectedAll();
     this.setState({ clipboard: clipboard });
-    this.switchMode();
   }
 
   /**
@@ -92,15 +76,18 @@ class Window extends React.Component {
   clickPaste() {
     let clipboard = this.state.clipboard.slice();
     clipboard.forEach((el) => {
+      let alreadyPresent = false;
       this.getCurrentDir().children.forEach((item) => {
         if (item.name === el.name) {
-          el.name += "(1)";
+          alreadyPresent = true;
         }
       });
-      this.getCurrentDir().children.push(el);
+      if (!alreadyPresent) {
+        this.getCurrentDir().children.push(el);
+      }
     });
+    this.unselectedAll();
     this.forceUpdate();
-    this.switchMode();
   }
 
   /**
@@ -116,8 +103,8 @@ class Window extends React.Component {
         1
       );
     });
+    this.unselectedAll();
     this.forceUpdate();
-    this.switchMode();
   }
 
   /**
@@ -126,7 +113,16 @@ class Window extends React.Component {
   clickCut() {
     this.clickCopy();
     this.clickDelete();
-    this.switchMode();
+  }
+
+  /**
+   * unselect all selected item, remove .selected css style and from the state.selected
+   */
+  unselectedAll() {
+    this.setState({ selected: [] });
+    [].forEach.call(document.querySelectorAll(".selected"), (el) => {
+      el.classList.remove("selected");
+    });
   }
 
   /**
@@ -172,7 +168,8 @@ class Window extends React.Component {
         <Item
           name={el.name}
           type={el.type}
-          clickItem={this.clickItem.bind(this)}
+          click={this.clickItem.bind(this)}
+          doubleClick={this.doubleClickItem.bind(this)}
         />
       );
       return null;
@@ -184,12 +181,12 @@ class Window extends React.Component {
   }
 
   /**
-   * handle click on items :
+   * handle SINGLE CLICK on items :
    * add or remove the element depending if it's already in state.selected and update appearance
    */
-  clickItem(name, type, ref) {
+  clickItem(name, ref) {
     const selected = this.state.selected.slice();
-    if (this.state.mode === "selection") {
+    if (true) {
       ref.current.classList.toggle("selected");
       if (selected.indexOf(name) === -1) {
         selected.push(name);
@@ -197,10 +194,17 @@ class Window extends React.Component {
         selected.splice(selected.indexOf(name), 1);
       }
       this.setState({ selected: selected });
-    } else if (this.state.mode === "navigation" && type === "directory") {
-      this.setState({ selected: [] });
-      this.setState({ currentPath: this.state.currentPath + name + "/" });
     }
+  }
+
+  /**
+   * handle DOUBLE CLICK on items:
+   * allow user to go in the file that he double clicked
+   */
+  doubleClickItem(name) {
+    this.unselectedAll();
+    this.setState({ selected: [] });
+    this.setState({ currentPath: this.state.currentPath + name + "/" });
   }
 
   render() {
@@ -231,10 +235,6 @@ class Window extends React.Component {
             </button>
           </div>
           <div className="action">
-            <small>Mode : </small>
-            <button onClick={this.switchMode.bind(this)}>
-              {this.state.mode}
-            </button>
             <button title="Copy" onClick={this.clickCopy.bind(this)}>
               <img src="/icons/copy.svg" alt="copy" />
             </button>
@@ -250,7 +250,7 @@ class Window extends React.Component {
             <button
               title="Rename"
               onClick={() => {
-                console.log(this.state);
+                console.log("rename button", this.state);
               }}
             >
               <img src="/icons/rename.svg" alt="rename" />
@@ -267,7 +267,6 @@ export default Window;
 
 /**
  * TODO :
- * fix  : clipboard must contain elements and not paths
  * feat : make the window take all the space
  * feat : next button
  * feat : rename

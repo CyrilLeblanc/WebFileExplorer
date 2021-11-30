@@ -20,6 +20,7 @@ class Item extends React.Component {
         className="item"
         ref={this.ref}
         onClick={this.handleClick.bind(this)}
+        onDoubleClick={this.handleDoubleClick.bind(this)}
       >
         <img src={"/icons/" + type + ".svg"} alt={this.props.name} />
         <label>{this.props.name}</label>
@@ -28,7 +29,13 @@ class Item extends React.Component {
   }
 
   handleClick() {
-    this.props.clickItem(this.props.name, this.props.type, this.ref);
+    this.props.click(this.props.name, this.ref);
+  }
+
+  handleDoubleClick() {
+    if (this.props.type === "directory") {
+      this.props.doubleClick(this.props.name, this.ref);
+    }
   }
 }
 
