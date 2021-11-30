@@ -1,16 +1,7 @@
 body {
   margin: 0;
-  font-family: "Arial, Helvetica, sans-serif";
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  height: 100vh;
+  font-size: 10px;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 button {
@@ -18,96 +9,70 @@ button {
   margin: auto 1px;
 }
 
-div.window {
-  border: solid 5px #247CFF;
-  width: 30rem;
-  max-width: 95vw;
-  max-height: 100vh;
-  /**
-  * Control 
-  */
-  /**
-  * Topbar
-  */
-  /**
-  * Content
-  */
-}
-
-div.window > .control {
-  background-color: #247CFF;
-}
-
-div.window > .control .right {
-  float: right;
-}
-
-div.window > .control > .title {
-  color: #EEE;
-  font-size: 18px;
-  height: 2rem;
-}
-
-div.window > .control button img {
+button img {
   height: 1.5rem;
   width: 1.5rem;
 }
 
-div.window .topbar {
-  background-color: #C4C4C4;
+.window {
+  background-color: #247cff;
+  padding: 5px;
+  height: calc(100vh - .6rem);
 }
 
-div.window .topbar .searchbar input {
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
+.window .title-bar {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
 }
 
-div.window .topbar button img {
-  height: 1.5rem;
-  width: 1.5rem;
+.window .title-bar .title {
+  font-size: 1.75rem;
+  color: #eee;
 }
 
-div.window .content {
-  min-height: 5rem;
-  height: 100%;
+.window .top-bar {
+  background-color: #aaa;
+  padding: .5rem;
+  margin-bottom: 0;
+}
+
+.window .top-bar .search-bar {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  margin-bottom: .25rem;
+}
+
+.window .top-bar .search-bar input {
+  width: calc(100% - 5rem);
+}
+
+.window .top-bar .search-bar .control {
+  display: inline;
+}
+
+.window .content {
+  background-color: #eee;
   width: 100%;
-  max-height: 20rem;
-  max-width: 30rem;
+  height: calc(100% - 7rem);
   overflow: auto;
 }
 
-div.window .content .item {
+.window .content .item {
   display: inline-block;
-  width: -webkit-min-content;
-  width: -moz-min-content;
-  width: min-content;
-  margin: 0.5rem;
-  padding: 0.5rem;
-  max-width: 7rem;
+  width: 5rem;
+  height: 5rem;
+  margin: 1rem;
 }
 
-div.window .content .item:hover {
-  outline: 1px solid #247CFF;
-  cursor: pointer;
-}
-
-div.window .content .item img {
-  display: block;
-  height: 70px;
-  width: 70px;
-  margin: auto;
-}
-
-div.window .content .item label {
-  text-align: center;
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-height: 3rem;
-}
-
-div.window .content .item.selected {
-  background-color: #aef;
+.window .content .item.selected {
+  background-color: #247cff;
 }
 /*# sourceMappingURL=main.css.map */

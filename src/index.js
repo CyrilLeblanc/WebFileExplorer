@@ -5,11 +5,7 @@ import Window from "./window.js";
 
 class App extends React.Component {
   render() {
-    return (
-      <div>
-        <Window />
-      </div>
-    );
+    return <Window />;
   }
 }
 

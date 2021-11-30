@@ -2,102 +2,62 @@
 
 body {
   margin: 0;
-  font-family: $font;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  font-size: 10px;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 button {
   border: none;
   margin: auto 1px;
+  img {
+    height: 1.5rem;
+    width: 1.5rem;
+  }
 }
 
-div.window {
-  border: solid 5px $primary_blue;
-  width: 30rem;
-  max-width: 95vw;
-  max-height: 100vh;
+.window {
+  background-color: $primary_blue;
+  padding: 5px;
+  height: calc(100vh - .6rem);
 
-  /**
-  * Control 
-  */
-  & > .control {
-    .right {
-      float: right;
-    }
-    > .title {
+  .title-bar {
+    display: flex;
+    justify-content: space-between;
+    .title {
+      font-size: 1.75rem;
       color: $primary_white;
-      font-size: 18px;
-      height: 2rem;
-    }
-
-    background-color: $primary_blue;
-    button {
-      img {
-        height: 1.5rem;
-        width: 1.5rem;
-      }
     }
   }
-
-  /**
-  * Topbar
-  */
-  .topbar {
-    background-color: $secondary_grey;
-    .searchbar {
+  .top-bar {
+    background-color: $primary_grey;
+    padding: .5rem;
+    margin-bottom: 0;
+    .search-bar {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: .25rem;
       input {
-        width: max-content;
+        width: calc(100% - 5rem);   // TODO : to optimise
       }
-    }
-    button {
-      img {
-        height: 1.5rem;
-        width: 1.5rem;
+      .control {
+        display: inline;
       }
     }
   }
-
-  /**
-  * Content
-  */
   .content {
-    min-height: 5rem;
-    height: 100%;
+    background-color: $primary_white;
     width: 100%;
-    max-height: 20rem;
-    max-width: 30rem;
+    height: calc(100% - 7rem);    // TODO : to optimise 
     overflow: auto;
 
-    .item {
+    .item{
       display: inline-block;
-      width: min-content;
-      margin: 0.5rem;
-      padding: 0.5rem;
-      max-width: 7rem;
+      width: 5rem;
+      height: 5rem;
+      margin: 1rem;
 
-      &:hover {
-        outline: 1px solid $primary_blue;
-        cursor: pointer;
-      }
-      img {
-        display: block;
-        height: 70px;
-        width: 70px;
-        margin: auto;
-      }
-      label {
-        text-align: center;
-        display: block;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-height: 3rem;
-      }
-
-      &.selected {
-        background-color: #aef;
+      &.selected{
+        background-color: $primary_blue;
       }
     }
   }

@@ -5,6 +5,7 @@ class Window extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      title: "WebFileExplorer",
       currentPath: "/",
       selected: [],
       clipboard: [],
@@ -116,6 +117,11 @@ class Window extends React.Component {
   }
 
   /**
+   * rename the first item in state.selected
+   */
+  clickRename() {}
+
+  /**
    * unselect all selected item, remove .selected css style and from the state.selected
    */
   unselectedAll() {
@@ -126,7 +132,7 @@ class Window extends React.Component {
   }
 
   /**
-   * return the current directory depending on the currentPath
+   * return a reference of the current directory depending on the state.currentPath
    */
   getCurrentDir() {
     const currentPath = ["/"].concat(this.state.currentPath.slice().split("/"));
@@ -210,8 +216,9 @@ class Window extends React.Component {
   render() {
     return (
       <div className="window">
-        <div className="control">
-          <div className="right">
+        <div className="title-bar">
+          <div className="title">{this.state.title}</div>
+          <div className="control">
             <button>
               <img src="/icons/down.svg" alt="down" />
             </button>
@@ -222,17 +229,18 @@ class Window extends React.Component {
               <img src="/icons/close.svg" alt="close" />
             </button>
           </div>
-          <div className="title">WebFileExplorer</div>
         </div>
-        <div className="topbar">
-          <div className="searchbar">
+        <div className="top-bar">
+          <div className="search-bar">
             <input type="text" value={this.state.currentPath} disabled />
-            <button onClick={this.goBack.bind(this)} title="Back">
-              <img src="/icons/back.svg" alt="back" />
-            </button>
-            <button title="Next">
-              <img src="/icons/next.svg" alt="next" />
-            </button>
+            <div className="control">
+              <button onClick={this.goBack.bind(this)} title="Back">
+                <img src="/icons/back.svg" alt="back" />
+              </button>
+              <button title="Next">
+                <img src="/icons/next.svg" alt="next" />
+              </button>
+            </div>
           </div>
           <div className="action">
             <button title="Copy" onClick={this.clickCopy.bind(this)}>
