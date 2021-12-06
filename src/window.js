@@ -61,7 +61,6 @@ class Window extends React.Component {
         currentPath: element.join("/"),
         history: history,
       });
-      console.log(this.state.history);
     }
   }
 
