@@ -67,9 +67,17 @@ button img {
 
 .window .content .item {
   display: inline-block;
-  width: 5rem;
-  height: 5rem;
   margin: 1rem;
+  width: 5rem;
+  height: -webkit-min-content;
+  height: -moz-min-content;
+  height: min-content;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.window .content .item:hover {
+  outline: 2px solid #247cff;
 }
 
 .window .content .item.selected {

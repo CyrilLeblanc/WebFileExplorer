@@ -52,9 +52,15 @@ button {
 
     .item{
       display: inline-block;
-      width: 5rem;
-      height: 5rem;
       margin: 1rem;
+      width: 5rem;
+      height: min-content;
+      font-size: 1.2rem;
+      text-align: center;
+
+      &:hover{
+        outline: 2px solid $primary_blue;
+      }
 
       &.selected{
         background-color: $primary_blue;
