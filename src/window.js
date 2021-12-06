@@ -54,8 +54,22 @@ class Window extends React.Component {
   goBack() {
     if (this.state.currentPath !== "/") {
       const element = this.state.currentPath.split("/");
+      let history = this.state.history.slice();
+      history.push(this.state.currentPath);
       element.splice(element.length - 2, 1);
-      this.setState({ currentPath: element.join("/") });
+      this.setState({
+        currentPath: element.join("/"),
+        history: history,
+      });
+      console.log(this.state.history);
+    }
+  }
+
+  goNext() {
+    if (this.state.history.length > 0) {
+      this.setState({
+        currentPath: this.state.history.pop(),
+      });
     }
   }
 
@@ -209,8 +223,11 @@ class Window extends React.Component {
    */
   doubleClickItem(name) {
     this.unselectedAll();
-    this.setState({ selected: [] });
-    this.setState({ currentPath: this.state.currentPath + name + "/" });
+    this.setState({
+      selected: [],
+      currentPath: this.state.currentPath + name + "/",
+      history: [],
+    });
   }
 
   render() {
@@ -237,7 +254,7 @@ class Window extends React.Component {
               <button onClick={this.goBack.bind(this)} title="Back">
                 <img src="/icons/back.svg" alt="back" />
               </button>
-              <button title="Next">
+              <button onClick={this.goNext.bind(this)} title="Next">
                 <img src="/icons/next.svg" alt="next" />
               </button>
             </div>
@@ -275,8 +292,7 @@ export default Window;
 
 /**
  * TODO :
- * feat : make the window take all the space
- * feat : next button
+ * feat : create new file or directory
  * feat : rename
  * feat : review CSS
  */
