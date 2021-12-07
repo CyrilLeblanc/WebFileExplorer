@@ -17,7 +17,7 @@ button img {
 .window {
   background-color: #247cff;
   padding: 5px;
-  height: calc(100vh - .6rem);
+  height: calc(100vh - 0.6rem);
 }
 
 .window .title-bar {
@@ -36,7 +36,7 @@ button img {
 
 .window .top-bar {
   background-color: #aaa;
-  padding: .5rem;
+  padding: 0.5rem;
   margin-bottom: 0;
 }
 
@@ -47,7 +47,7 @@ button img {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
-  margin-bottom: .25rem;
+  margin-bottom: 0.25rem;
 }
 
 .window .top-bar .search-bar input {
@@ -82,5 +82,34 @@ button img {
 
 .window .content .item.selected {
   background-color: #247cff;
+}
+
+.modal-container {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(170, 170, 170, 0.7);
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.modal-container .modal {
+  background-color: #eee;
+  height: -webkit-min-content;
+  height: -moz-min-content;
+  height: min-content;
+  padding: 1rem;
+  border: 2px solid #247cff;
+}
+
+.modal-container .modal .control {
+  margin-top: 1rem;
 }
 /*# sourceMappingURL=main.css.map */

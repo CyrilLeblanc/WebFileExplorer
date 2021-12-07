@@ -1,9 +1,11 @@
 import React from "react";
 import Item from "./item.js";
+import ModalRename from "./modalRename.js";
 
 class Window extends React.Component {
   constructor(props) {
     super(props);
+    this.modalRef = React.createRef();
     this.state = {
       title: "WebFileExplorer",
       currentPath: "/",
@@ -64,6 +66,9 @@ class Window extends React.Component {
     }
   }
 
+  /**
+   * Allow the user to go back where he was before before clicking the "back" button
+   */
   goNext() {
     if (this.state.history.length > 0) {
       this.setState({
@@ -130,9 +135,37 @@ class Window extends React.Component {
   }
 
   /**
-   * rename the first item in state.selected
+   * display the modal to show the user a prompt to select a new name
    */
-  clickRename() {}
+  clickRename() {
+    if (this.state.selected.length > 0) {
+      var str = this.state.selected.slice()[this.state.selected.length - 1];
+      [].forEach.call(document.querySelectorAll(".selected"), (el) => {
+        if (el.children[1].innerText !== str) {
+          el.classList.remove("selected");
+        }
+      });
+      this.setState({ selected: [str] });
+      console.log(this.state.selected);
+      this.modalRef.current.setup(str);
+      this.modalRef.current.ref.current.style.display = "flex";
+    }
+  }
+
+  /**
+   * rename the given element into what the user gave in the modal.
+   */
+  rename(oldName, newName) {
+    if (newName !== "") {
+      this.getCurrentDir().children.forEach((el, i) => {
+        if (el.name === oldName) {
+          el.name = newName;
+        }
+      });
+      this.unselectedAll();
+      this.forceUpdate();
+    }
+  }
 
   /**
    * unselect all selected item, remove .selected css style and from the state.selected
@@ -205,15 +238,13 @@ class Window extends React.Component {
    */
   clickItem(name, ref) {
     const selected = this.state.selected.slice();
-    if (true) {
-      ref.current.classList.toggle("selected");
-      if (selected.indexOf(name) === -1) {
-        selected.push(name);
-      } else {
-        selected.splice(selected.indexOf(name), 1);
-      }
-      this.setState({ selected: selected });
+    ref.current.classList.toggle("selected");
+    if (selected.indexOf(name) === -1) {
+      selected.push(name);
+    } else {
+      selected.splice(selected.indexOf(name), 1);
     }
+    this.setState({ selected: selected });
   }
 
   /**
@@ -271,17 +302,17 @@ class Window extends React.Component {
             <button title="Cut" onClick={this.clickCut.bind(this)}>
               <img src="/icons/cut.svg" alt="cut" />
             </button>
-            <button
-              title="Rename"
-              onClick={() => {
-                console.log("rename button", this.state);
-              }}
-            >
+            <button title="Rename" onClick={this.clickRename.bind(this)}>
               <img src="/icons/rename.svg" alt="rename" />
             </button>
           </div>
         </div>
         <div className="content">{this.getItems()}</div>
+        <ModalRename
+          ref={this.modalRef}
+          name={"test"}
+          rename={this.rename.bind(this)}
+        />
       </div>
     );
   }
@@ -291,7 +322,6 @@ export default Window;
 
 /**
  * TODO :
- * feat : create new file or directory
  * feat : rename
- * feat : review CSS
+ * feat : create new file or directory
  */
