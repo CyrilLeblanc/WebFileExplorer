@@ -1,15 +1,19 @@
 import React from "react";
 
-class Item extends React.Component {
-  constructor(props) {
-    super(props);
-    this.ref = React.createRef();
-  }
+interface IProps{
+  name: string;
+  type: string;
+  click: Function;
+  doubleClick: Function;
+}
+
+class Item extends React.Component<IProps> {
+  
+  ref = React.createRef();
 
   render() {
-    let ext = this.props.name.split(".");
-    ext = ext[ext.length - 1];
-    let type = "none";
+    let ext: string = this.props.name.split(".")[(this.props.name.split(".")).length - 1];
+    let type: string = "none";
     if (["txt", "odt"].indexOf(ext) !== -1) type = "text";
     if (["mp3"].indexOf(ext) !== -1) type = "music";
     if (["png", "jpeg", "gif"].indexOf(ext) !== -1) type = "image";
@@ -18,7 +22,7 @@ class Item extends React.Component {
     return (
       <div
         className="item"
-        ref={this.ref}
+        ref={this.ref as React.LegacyRef<HTMLDivElement>}
         onClick={this.handleClick.bind(this)}
         onDoubleClick={this.handleDoubleClick.bind(this)}
       >

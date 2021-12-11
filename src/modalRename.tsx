@@ -1,16 +1,26 @@
 import React from "react";
 
-class ModalRename extends React.Component {
-  constructor(props) {
+interface IProps {
+  rename: Function;
+  name: string;
+}
+
+class ModalRename extends React.Component<IProps> {
+  inputRef: React.RefObject<any>;
+  ref: React.RefObject<any>;
+  oldName: string = "";
+  name: string = "";
+
+  constructor(props: IProps) {
     super(props);
     this.inputRef = React.createRef();
     this.ref = React.createRef();
   }
 
-  setup(name) {
+  setup(name: string) {
     this.oldName = name;
     this.inputRef.current.value = name;
-    this.inputRef.current.focus();
+    this.inputRef.current.click();
   }
 
   render() {
@@ -28,9 +38,13 @@ class ModalRename extends React.Component {
             >
               Accept
             </button>
-            <button onClick={() => {
-              this.ref.current.style.display = "none";
-            }}>Cancel</button>
+            <button
+              onClick={() => {
+                this.ref.current.style.display = "none";
+              }}
+            >
+              Cancel
+            </button>
           </div>
         </div>
       </div>

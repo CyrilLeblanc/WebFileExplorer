@@ -1,11 +1,27 @@
 import React from "react";
-import Item from "./item.js";
-import ModalRename from "./modalRename.js";
+import Item from "./item";
+import ModalRename from "./modalRename";
 
-class Window extends React.Component {
-  constructor(props) {
+interface IState {
+  title: string;
+  currentPath: string;
+  selected: string[];
+  clipboard: IItem[];
+  history: string[];
+  items: IItem;
+}
+
+interface IItem {
+  type: string;
+  name: string;
+  children?: IItem[];
+}
+
+class Window extends React.Component<any, IState> {
+  modalRef: React.RefObject<any> = React.createRef();
+
+  constructor(props: any) {
     super(props);
-    this.modalRef = React.createRef();
     this.state = {
       title: "WebFileExplorer",
       currentPath: "/",
@@ -22,29 +38,52 @@ class Window extends React.Component {
             children: [
               {
                 type: "directory",
-                name: "temp",
+                name: "facture",
                 children: [
-                  { type: "directory", name: "finale", children: [] },
-                  { type: "file", name: "re.odt" },
-                  { type: "file", name: "ie.odt" },
-                  { type: "file", name: "za.odt" },
+                  { type: "file", name: "voiture.odt"},
+                  { type: "file", name: "assurance.odt"},
+                  { type: "file", name: "loyer.odt"},
                 ],
               },
-              { type: "file", name: "facture.odt" },
-              { type: "file", name: "test.txt" },
+              {
+                type: "directory",
+                name: "administratif",
+                children: [
+                  { type: "file", name: "diplome.odt"},
+                  { type: "file", name: "facture.odt"},
+                ],
+              },
+              { type: "file", name: "id.odt"},
+              { type: "file", name: "test.txt"},
             ],
           },
           {
             type: "directory",
             name: "Images",
-            children: [],
+            children: [
+              {
+                type: "directory",
+                name: "vacance",
+                children: [
+                  { type: "file", name: "hawuai.jpeg"},
+                  { type: "file", name: "bateau.jpg"},
+                ],
+              },
+              { type: "file", name: "le chien.jpeg"},
+            ],
           },
           {
             type: "directory",
-            name: "Videos",
-            children: [],
+            name: "Musics",
+            children: [
+              {
+                type: "directory",
+                name: "nirvana",
+                children: [{ type: "file", name: "connaisPAS.mp3"}],
+              },
+            ],
           },
-          { type: "file", name: "test.odt" },
+          { type: "file", name: "test.odt"},
         ],
       },
     };
@@ -53,7 +92,7 @@ class Window extends React.Component {
   /**
    * Allow the user to go back in directory tree
    */
-  goBack() {
+  public goBack() {
     if (this.state.currentPath !== "/") {
       const element = this.state.currentPath.split("/");
       let history = this.state.history.slice();
@@ -69,10 +108,10 @@ class Window extends React.Component {
   /**
    * Allow the user to go back where he was before before clicking the "back" button
    */
-  goNext() {
+  public goNext() {
     if (this.state.history.length > 0) {
       this.setState({
-        currentPath: this.state.history.pop(),
+        currentPath: this.state.history.pop() as string,
       });
     }
   }
@@ -80,10 +119,10 @@ class Window extends React.Component {
   /**
    * put selected element in clipboard
    */
-  clickCopy() {
-    let clipboard = this.state.clipboard.splice();
+  public clickCopy() {
+    let clipboard: IItem[] = [];
     this.state.selected.forEach((name) => {
-      clipboard.push(this.getItem(name));
+      clipboard.push(this.getItem(name) as IItem);
     });
     this.unselectedAll();
     this.setState({ clipboard: clipboard });
@@ -92,17 +131,17 @@ class Window extends React.Component {
   /**
    * paste element in clipboard into current directory
    */
-  clickPaste() {
+  public clickPaste() {
     let clipboard = this.state.clipboard.slice();
     clipboard.forEach((el) => {
       let alreadyPresent = false;
-      this.getCurrentDir().children.forEach((item) => {
+      (this.getCurrentDir().children as IItem[]).forEach((item) => {
         if (item.name === el.name) {
           alreadyPresent = true;
         }
       });
       if (!alreadyPresent) {
-        this.getCurrentDir().children.push(el);
+        (this.getCurrentDir().children as IItem[]).push(el);
       }
     });
     this.unselectedAll();
@@ -112,11 +151,11 @@ class Window extends React.Component {
   /**
    * delete selected items in current directory
    */
-  clickDelete() {
+  public clickDelete() {
     let children = this.getCurrentDir().children;
     this.state.selected.forEach((item) => {
-      children.splice(
-        children.findIndex((el) => {
+      (children as IItem[]).splice(
+        (children as IItem[]).findIndex((el) => {
           return el.name === item;
         }),
         1
@@ -129,7 +168,7 @@ class Window extends React.Component {
   /**
    * put the selected items in clipboard and delete them
    */
-  clickCut() {
+  public clickCut() {
     this.clickCopy();
     this.clickDelete();
   }
@@ -137,16 +176,15 @@ class Window extends React.Component {
   /**
    * display the modal to show the user a prompt to select a new name
    */
-  clickRename() {
+  public clickRename() {
     if (this.state.selected.length > 0) {
       var str = this.state.selected.slice()[this.state.selected.length - 1];
-      [].forEach.call(document.querySelectorAll(".selected"), (el) => {
+      [].forEach.call(document.querySelectorAll(".selected"), (el: any) => {
         if (el.children[1].innerText !== str) {
           el.classList.remove("selected");
         }
       });
       this.setState({ selected: [str] });
-      console.log(this.state.selected);
       this.modalRef.current.setup(str);
       this.modalRef.current.ref.current.style.display = "flex";
     }
@@ -155,9 +193,9 @@ class Window extends React.Component {
   /**
    * rename the given element into what the user gave in the modal.
    */
-  rename(oldName, newName) {
+  public rename(oldName: string, newName: string) {
     if (newName !== "") {
-      this.getCurrentDir().children.forEach((el, i) => {
+      (this.getCurrentDir().children as IItem[]).forEach((el, i) => {
         if (el.name === oldName) {
           el.name = newName;
         }
@@ -167,12 +205,29 @@ class Window extends React.Component {
     }
   }
 
+  public clickNewFile() {
+    (this.getCurrentDir().children as IItem[]).push({
+      type: "file",
+      name: "new_file",
+    });
+    this.forceUpdate();
+  }
+
+  public clickNewDirectory() {
+    (this.getCurrentDir().children as IItem[]).push({
+      type: "directory",
+      name: "new_directory",
+      children: [],
+    });
+    this.forceUpdate();
+  }
+
   /**
    * unselect all selected item, remove .selected css style and from the state.selected
    */
-  unselectedAll() {
+  public unselectedAll() {
     this.setState({ selected: [] });
-    [].forEach.call(document.querySelectorAll(".selected"), (el) => {
+    [].forEach.call(document.querySelectorAll(".selected"), (el: any) => {
       el.classList.remove("selected");
     });
   }
@@ -180,19 +235,15 @@ class Window extends React.Component {
   /**
    * return a reference of the current directory depending on the state.currentPath
    */
-  getCurrentDir() {
+  public getCurrentDir() {
     const currentPath = ["/"].concat(this.state.currentPath.slice().split("/"));
     let items = this.state.items;
-    currentPath.map((name) => {
-      items.children.map((dir, i) => {
+    currentPath.forEach((name: any) => {
+      (items.children as IItem[]).forEach((dir) => {
         if (dir.type === "directory" && dir.name === name) {
           items = dir;
-        } else {
-          return null;
         }
-        return null;
       });
-      return null;
     });
     return items;
   }
@@ -200,22 +251,22 @@ class Window extends React.Component {
   /**
    * return the item depending on the current directory and the name of the item
    */
-  getItem(name) {
-    let temp = null;
-    this.getCurrentDir().children.forEach((item) => {
+  public getItem(name: string): IItem | void{
+    let value: IItem = {type: "", name: ""};
+    (this.getCurrentDir().children as IItem[]).forEach((item) => {
       if (item.name === name) {
-        temp = item;
+        value = item;
       }
     });
-    return temp;
+    return value;
   }
 
   /**
    * return list of <Item> depending of the current directory
    */
-  getItems() {
-    let items = [];
-    this.getCurrentDir().children.map((el) => {
+  public getItems() {
+    let items: any[] = [];
+    (this.getCurrentDir().children as IItem[]).map((el: IItem) => {
       items.push(
         <Item
           name={el.name}
@@ -236,7 +287,7 @@ class Window extends React.Component {
    * handle SINGLE CLICK on items :
    * add or remove the element depending if it's already in state.selected and update appearance
    */
-  clickItem(name, ref) {
+  public clickItem(name: string, ref: React.RefObject<any>) {
     const selected = this.state.selected.slice();
     ref.current.classList.toggle("selected");
     if (selected.indexOf(name) === -1) {
@@ -251,7 +302,7 @@ class Window extends React.Component {
    * handle DOUBLE CLICK on items:
    * allow user to go in the file that he double clicked
    */
-  doubleClickItem(name) {
+  public doubleClickItem(name: string) {
     this.unselectedAll();
     this.setState({
       selected: [],
@@ -260,7 +311,7 @@ class Window extends React.Component {
     });
   }
 
-  render() {
+  public render() {
     return (
       <div className="window">
         <div className="title-bar">
@@ -305,6 +356,15 @@ class Window extends React.Component {
             <button title="Rename" onClick={this.clickRename.bind(this)}>
               <img src="/icons/rename.svg" alt="rename" />
             </button>
+            <button title="new File" onClick={this.clickNewFile.bind(this)}>
+              <img src="/icons/newFile.svg" alt="new File" />
+            </button>
+            <button
+              title="new Directory"
+              onClick={this.clickNewDirectory.bind(this)}
+            >
+              <img src="/icons/newDirectory.svg" alt="new Directory" />
+            </button>
           </div>
         </div>
         <div className="content">{this.getItems()}</div>
@@ -319,9 +379,3 @@ class Window extends React.Component {
 }
 
 export default Window;
-
-/**
- * TODO :
- * feat : rename
- * feat : create new file or directory
- */
