@@ -1,6 +1,6 @@
 import React from "react";
 
-interface IProps {
+type IProps = {
   rename: Function;
   name: string;
 }

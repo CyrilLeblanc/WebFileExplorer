@@ -2,7 +2,7 @@ import React from "react";
 import Item from "./item";
 import ModalRename from "./modalRename";
 
-interface IState {
+type IState = {
   title: string;
   currentPath: string;
   selected: string[];
@@ -11,7 +11,7 @@ interface IState {
   items: IItem;
 }
 
-interface IItem {
+type IItem = {
   type: string;
   name: string;
   children?: IItem[];

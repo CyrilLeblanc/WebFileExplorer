@@ -1,6 +1,6 @@
 import React from "react";
 
-interface IProps{
+type IProps = {
   name: string;
   type: string;
   click: Function;
